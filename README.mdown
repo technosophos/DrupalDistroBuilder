@@ -47,7 +47,7 @@ That's all there is to it. At the end of Phing's build, you will have a Drupal p
 
 That file will contain Drupal and all of the modules and themes you selected. If you chose to remove modules from core, they will not be included in that tar file.
 
-From there, follow the standard Drupal installation instructions to proceed: http://drupal.org/getting-started/install
+From there, follow the standard [Drupal installation instructions](http://drupal.org/getting-started/install) to proceed. 
 
 ### drupal.properties 
 
@@ -80,17 +80,17 @@ That's all there is to the configuration file.
 
 ## Can DDB Be Configured To...?
 
-DDB is highly configurable, and is not intended to be a one-size-fits-all solution. In fact, it was built on top of Phing precisely for that reason. To modify the way the package builder works, simply make a backup copy of build.xml, and then hack away at build.xml. The Phing project is fully documented: http://phing.info/
+DDB is highly configurable, and is not intended to be a one-size-fits-all solution. In fact, it was built on top of Phing precisely for that reason. To modify the way the package builder works, simply make a backup copy of build.xml, and then hack away at build.xml. The Phing project is [fully documented](http://phing.info/)
 
 A few things you can easily make Phing do to Drupal:
 
 * Move files and directories around. For example, by default DDB stores all modules in sites/default/all/modules (which will interoperate well with Drush). You can easily change this in Phing, though.
 * Dynamically replace strings. Yes, you can programmatically remote "Blue Smurf" from the search page.
 * Programmatically patch core or modules.
-* Create a default settings.php file, complete with preconfigured database connections. In fact, you can even PRE-CREATE the database from within the build.xml script. See http://phing.info/docs/guide/stable/chapters/appendixes/AppendixC-OptionalTasks.html#PDOSQLExecTask
+* Create a default settings.php file, complete with preconfigured database connections. In fact, you can even PRE-CREATE the database from within the build.xml script. See [PDOSQLExecTask](http://phing.info/docs/guide/stable/chapters/appendixes/AppendixC-OptionalTasks.html#PDOSQLExecTask)
 * Create a custom installation profile on the fly. This takes a little bit of work and perhaps some dynamic code generation, but it is certainly possible.
-* Migrate existing Drupal databases. See http://phing.info/docs/guide/stable/chapters/appendixes/AppendixC-OptionalTasks.html#DbDeployTask
-* Integrate with your own SVN repository. Other VCSs might be supported by third-party Phing tools. See the Svn* tasks at http://phing.info/docs/guide/stable/
+* Migrate existing Drupal databases. See [DbDeployTask](http://phing.info/docs/guide/stable/chapters/appendixes/AppendixC-OptionalTasks.html#DbDeployTask)
+* Integrate with your own SVN repository. Other VCSs might be supported by third-party Phing tools. See the [Svn* tasks](http://phing.info/docs/guide/stable/)
 * Download other third-party libraries like TinyMCE or Google Analytics. This may require minor PHP coding, but the tasks included with DDB show how it is done.
 * With a little bit of creativity, one could even configure Phing to actually run the Drupal installation routines. This would require a healthy dose of PHP code, though.
 
@@ -126,4 +126,4 @@ Two reasons:
 
 ## Authors
 
-DrupalDistroBuilder was written by Matt Butcher (matt@aleph-null.tv). It relies heavily on Phing (http://phing.info).
+DrupalDistroBuilder was written by Matt Butcher (matt@aleph-null.tv). It relies heavily on Phing ([http://phing.info](http://phing.info)).
