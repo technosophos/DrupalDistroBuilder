@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<project name="DrupalDistroBuilder" 
+  description="Build a custom Drupal distribution."
+  basedir="." 
+  default="main"
+>
+<!--
+Drupal Distribution Builder
+Copyright (c) 2009, Matt Butcher, some rights reserved.
+
+THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is asserted over build.xml. The source code in src/* is licensed under the LGPL 2.1.
+-->
+
+  <!-- Global properties -->
+  <property name="destdir" value="."/>
+  <property name="srcdir" value="./src"/>
+  <property name="destdir" value="."/>
+  <property name="builddir" value="./src/tmp/build"/>
+  <property name="currcomponent" value="autoload"/>
+  <property name="tmpdir" value="./src/tmp"/>
+  
+  <includepath classpath="${srcdir}"/>
+  
+  <property file="drupal.properties"/>
+  <taskdef classname="lib.Task.DrupalDownloadTask" name="getdrupal"/>
+  <taskdef classname="lib.Task.DrupalComponentDownloadTask" name="getcomponent"/>
+
+  <!-- Files that must be included in the release -->
+  <fileset id="licensefiles" dir=".">
+    <include name="README"/>
+    <include name="INSTALL"/>
+  </fileset>
+
+  <!-- Files to be treated as source code -->
+  <fileset id="sourcecode" dir="">
+    <include name="**/*" />
+  </fileset>
+
+  <!--
+  ==========================
+  TARGETS
+  ==========================
+  -->
+
+  <target name="explain">
+    <echo>Adding modules ${drupal.modules}</echo>
+    <echo>Adding themes ${drupal.themes}</echo>
+    <echo>Removing modules from core ${drupal.exclude.modules}</echo>
+    <echo>Removing themes from core ${drupal.exclude.themes}</echo>
+  </target>
+
+  <!-- Main Target: 
+  This fetches Drupal, your modules, and your themes. Then it prunes unwanted
+  modules and themes from core. Then it packages up a shiny new custom Drupal
+  tarball and cleans up after itself.
+  -->
+  <target name="main" description="main target" 
+    depends="getDrupal,getModules,getThemes,pruneCore,repackage,clean">
+  </target>
+  
+  <!-- Fetch the latest version of Drupal. -->
+  <target name="getDrupal" description="Get Drupal from Drupal.org">
+      <getdrupal dir="${tmpdir}"/>
+      <mkdir dir="${tmpdir}/unpack"/>
+      <untar file="${tmpdir}/drupal-dl.tgz" todir="${tmpdir}/unpack"/>
+      <copy todir="${builddir}">
+        <mapper type="regexp" from="^drupal-[\.0-9]+\/(.*)" to="drupal/\1"/>
+        <fileset dir="${tmpdir}/unpack/">
+          <include name="**"/>
+        </fileset>
+      </copy>
+  </target>
+  
+  <!-- Fetch the latest version of a package (module or theme). -->
+  <target name="downloadPackage">
+    <getcomponent component="${currcomponent}" dir="${tmpdir}"/>
+    <echo>${component.name}-${component.version}</echo>
+    <untar file="${tmpdir}/${currcomponent}-dl.tgz" todir="${tmpdir}/unpack"/>
+    <copy todir="${downloaddestination}">
+      <fileset dir="${tmpdir}/unpack">
+        <include name="${currcomponent}/**"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <!-- Fetch all desired modules. -->
+  <target name="getModules" depends="getDrupal">
+    <property name="downloaddestination" 
+      value="${builddir}/drupal/sites/all/modules"
+      override="yes"/>
+    <mkdir dir="${builddir}/drupal/sites/all/modules"/>
+    <foreach list="${drupal.modules}" param="currcomponent" 
+      target="downloadPackage"/>
+  </target>
+  
+  <!-- Fetch all desired themes. -->
+  <target name="getThemes" depends="getDrupal">
+    <property name="downloaddestination"
+      value="${builddir}/drupal/sites/all/themes"
+      override="yes"/>
+    <mkdir dir="${builddir}/drupal/sites/all/themes"/>
+    <foreach list="${drupal.themes}" param="currcomponent" target="downloadPackage"/>
+  </target>
+  
+  <target name="deletePackage">
+    <echo>Deleting ${ickypackage} from ${deletetype}.</echo>
+    <delete includeemptydirs="true">
+      <fileset dir="${builddir}/drupal/${deletetype}">
+        <include name="${ickypackage}/**"/>
+        <include name="**/${ickypackage}/**"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <!-- Remove modules/themes that we don't want. -->
+  <target name="pruneCore">
+    <property name="deletetype" value="themes"/>
+    <foreach list="${drupal.exclude.themes}" param="ickypackage"
+      target="deletePackage"/>
+    <property name="deletetype" value="modules" override="yes"/>
+    <foreach list="${drupal.exclude.modules}" param="ickypackage"
+      target="deletePackage"/>
+  </target>
+  
+  <!-- Package the entire thing into a tarball. -->
+  <target name="repackage" depends="getDrupal">
+    <tstamp/>
+    <tar destfile="${destdir}/drupal-${drupal.version}-${DSTAMP}-${TSTAMP}.tgz" 
+      compression="gzip">
+      <fileset dir="${builddir}">
+        <include name="drupal/**"/>
+      </fileset>
+    </tar>
+  </target>
+  
+  
+  
+  <!-- Remove all of the build data. -->
+  <target name="clean" description="Clean out temporary data.">
+    <delete includeemptydirs="true">
+      <fileset dir="${tmpdir}">
+        <include name="*.tgz"/>
+        <include name="unpack/**"/>
+        <include name="build/**"/>
+      </fileset>
+    </delete>
+  </target>
+</project>
