@@ -22,9 +22,9 @@ To install DDB, you need to do the following:
     $ pear channel-discover pear.phing.info
     $ pear install phing/phing
 
-Find out more at http://phing.info/trac/wiki/Users/Download
+Read the [complete install instructions](http://phing.info/trac/wiki/Users/Download) for manual installs or more guidance.
 
-2. Download the DDB package.
+2. Download the most recent DDB package from [http://github.com/technosophos/DrupalDistroBuilder/downloads](http://github.com/technosophos/DrupalDistroBuilder/downloads).
 
 3. Untar the DDB package into the desired location.
 
@@ -34,10 +34,17 @@ Remember, DDB does not depend on Drupal at all, and does not use a web server ei
 
 ## Using DDB
 
-There are two steps to building a custom Drupal distro with DDB:
+There are three steps to building a custom Drupal distro with DDB:
 
-1. Edit drupal.properties.
-2. Run the Phing command from the same directory that has build.xml:
+1. Change directories into DDB's home. DDB is directory-sensitive by design.
+
+    $ cd DrupalDistroBuilder/
+
+2. Edit drupal.properties in your favorite editor.
+
+    $ edit drupal.properties
+
+3. Run the Phing command from the same directory that has build.xml:
 
     $ phing
 
@@ -47,7 +54,7 @@ That's all there is to it. At the end of Phing's build, you will have a Drupal p
 
 That file will contain Drupal and all of the modules and themes you selected. If you chose to remove modules from core, they will not be included in that tar file.
 
-From there, follow the standard [Drupal installation instructions](http://drupal.org/getting-started/install) to proceed. 
+From there, follow the standard [Drupal installation instructions](http://drupal.org/getting-started/install) to proceed.
 
 ### drupal.properties 
 
@@ -78,6 +85,18 @@ Set this to a comma-separated list of themes that should be excluded from the di
 
 That's all there is to the configuration file.
 
+### Going Beyond Basic Builders
+
+DDB has multiple tasks that are chained together to move from downloading Drupal through cleaning up after itself. You can see a complete list of these tasks by running: 
+
+    $ phing -l
+    
+You can also run specific tasks by name. So if you just want to clean up after a DDB run, you can run this:
+
+    $ phing clean
+    
+All tasks are defined in the build.xml file, and can be edited to your liking. You may add your own targets or change the configuration in your build.xml file. You are advised to back up this file before upgrading to a new version of DDB, which may overwrite your build.xml file.
+
 ## Can DDB Be Configured To...?
 
 DDB is highly configurable, and is not intended to be a one-size-fits-all solution. In fact, it was built on top of Phing precisely for that reason. To modify the way the package builder works, simply make a backup copy of build.xml, and then hack away at build.xml. The Phing project is [fully documented](http://phing.info/)
@@ -95,6 +114,10 @@ A few things you can easily make Phing do to Drupal:
 * With a little bit of creativity, one could even configure Phing to actually run the Drupal installation routines. This would require a healthy dose of PHP code, though.
 
 Phing provides a powerful declarative XML-based language that happens to be particularly good at file system work. A look through the Phing manual may give you lots of other ideas for extensions to this system.
+
+### DDB-specific tasks and code
+
+DDB uses a handful of PHP classes to perform Drupal-specific build tasks. These are all located inside of src/lib. This code is licensed under the LGPL 2.1. You are free to modify it or use it as a template for you own tasks.
 
 ## Why Doesn't DDB Use A Custom Install Profile
 
