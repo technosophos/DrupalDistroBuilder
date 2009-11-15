@@ -17,18 +17,18 @@ From there, all you need to do is install the new package, following the same in
 
 To install DDB, you need to do the following:
 
-1. Install Phing.
+**Install Phing**
 
-    $ pear channel-discover pear.phing.info
-    $ pear install phing/phing
+    pear channel-discover pear.phing.info
+    pear install phing/phing
 
 Read the [complete install instructions](http://phing.info/trac/wiki/Users/Download) for manual installs or more guidance.
 
-2. Download the most recent DDB package from [http://github.com/technosophos/DrupalDistroBuilder/downloads](http://github.com/technosophos/DrupalDistroBuilder/downloads).
+**Download the most recent DDB package from** [http://github.com/technosophos/DrupalDistroBuilder/downloads](http://github.com/technosophos/DrupalDistroBuilder/downloads)
 
-3. Untar the DDB package into the desired location.
+**Untar the DDB package into the desired location**
 
-    $ tar -zxvf ddb-VERSION.tgz
+    tar -zxvf ddb-VERSION.tgz
 
 Remember, DDB does not depend on Drupal at all, and does not use a web server either. It can be installed anywhere on your system, though it is probably a good idea to not install it into your webroot where others could see it.
 
@@ -36,17 +36,17 @@ Remember, DDB does not depend on Drupal at all, and does not use a web server ei
 
 There are three steps to building a custom Drupal distro with DDB:
 
-1. Change directories into DDB's home. DDB is directory-sensitive by design.
+**Change directories into DDB's home. DDB is directory-sensitive by design**
 
-    $ cd DrupalDistroBuilder/
+    cd DrupalDistroBuilder/
 
-2. Edit drupal.properties in your favorite editor.
+**Edit drupal.properties in your favorite editor**
 
-    $ edit drupal.properties
+    edit drupal.properties
 
-3. Run the Phing command from the same directory that has build.xml:
+**Run the Phing command from the same directory that has build.xml**
 
-    $ phing
+    phing
 
 That's all there is to it. At the end of Phing's build, you will have a Drupal package with a name that looks something like this:
 
@@ -89,11 +89,11 @@ That's all there is to the configuration file.
 
 DDB has multiple tasks that are chained together to move from downloading Drupal through cleaning up after itself. You can see a complete list of these tasks by running: 
 
-    $ phing -l
+    phing -l
     
 You can also run specific tasks by name. So if you just want to clean up after a DDB run, you can run this:
 
-    $ phing clean
+    phing clean
     
 All tasks are defined in the build.xml file, and can be edited to your liking. You may add your own targets or change the configuration in your build.xml file. You are advised to back up this file before upgrading to a new version of DDB, which may overwrite your build.xml file.
 
