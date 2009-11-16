@@ -1,8 +1,6 @@
 # Using DrupalDistroBuilder
 
-You can build your own distribution of Drupal -- complete with all the themes and modules you want -- in two minutes. No lie.
-
-DrupalDistroBuilder (DDB) is a simple tool for creating customized installation packages of Drupal. DDB does the following:
+DrupalDistroBuilder (DDB) is a simple tool for creating customized installation packages of Drupal. Out of the box (with no changes), DDB does the following:
 
 - It downloads the latest version of Drupal automatically.
 - Based on your configuration, it retrieves all your preferred modules and themes.
@@ -12,6 +10,8 @@ DrupalDistroBuilder (DDB) is a simple tool for creating customized installation 
 At the end of the process, you are left with a shiny new archive (named drupal-VERSION-DATE-TIME.tgz) that has everything you want.
 
 From there, all you need to do is install the new package, following the same installation procedure as always.
+
+But this is just the tip of the iceberg. DDB is a starting point for customization. Simply modify the build.xml file to take advantage of all of the tools and capabilities in Phing.
 
 ## Installation
 
@@ -123,11 +123,9 @@ DDB uses a handful of PHP classes to perform Drupal-specific build tasks. These 
 
 While this system could directly interact with the Drupal installer (creating, for example, a custom install profile), it does not do so by default. Why? Because interaction is not necessary.
 
-## Why Didn't You Just Use Drush?
+## Why Didn't You Just Use Drush-Make?
 
-Drush requires Drupal in order to run. For that reason, Drush cannot perform the same task that DDB was built to accomplish.
-
-DDB was built to be compatible with Drush. You should be able to build a distribution that includes Drush, and then use Drush once Drupal is installed.
+I discovered drush-make the day after DDB was written. drush-make is a very basic make tool that does not have anywhere near the flexibility of Phing. You can review both for yourself and see what you prefer.
 
 ## Why Is This LGPL Instead of GPL?
 
@@ -145,7 +143,7 @@ build.xml is considered to be a configuration file IN THE PUBLIC DOMAIN, the con
 Two reasons:
 
 1. Because there is no place in Drupal's CVS for such projects. This is not a theme, module, or translation. The current Project configuration does not allow for anything else.
-2. Because this project is not released under the GPL, which is viewed as too restrictive for DrupalDistroBuilder.
+2. Because this project is not released under the GPL, which is viewed as too restrictive for DrupalDistroBuilder. We do not want the build.xml file to be GPLed, as that causes your modifications to be GPLed.
 
 ## Authors
 
