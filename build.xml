@@ -24,6 +24,7 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
   <property file="drupal.properties"/>
   <taskdef classname="lib.Task.DrupalDownloadTask" name="getdrupal"/>
   <taskdef classname="lib.Task.DrupalComponentDownloadTask" name="getcomponent"/>
+  <taskdef classname="lib.Task.HttpDownloadTask" name="download"/>
 
   <!-- Files that must be included in the release -->
   <fileset id="licensefiles" dir=".">
@@ -48,7 +49,7 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
     <echo>Removing modules from core ${drupal.exclude.modules}</echo>
     <echo>Removing themes from core ${drupal.exclude.themes}</echo>
   </target>
-
+  
   <!-- Main Target: 
   This fetches Drupal, your modules, and your themes. Then it prunes unwanted
   modules and themes from core. Then it packages up a shiny new custom Drupal

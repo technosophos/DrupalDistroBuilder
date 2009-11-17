@@ -110,7 +110,7 @@ A few things you can easily make Phing do to Drupal:
 * Create a custom installation profile on the fly. This takes a little bit of work and perhaps some dynamic code generation, but it is certainly possible.
 * Migrate existing Drupal databases. See [DbDeployTask](http://phing.info/docs/guide/stable/chapters/appendixes/AppendixC-OptionalTasks.html#DbDeployTask)
 * Integrate with your own SVN repository. Other VCSs might be supported by third-party Phing tools. See the [Svn* tasks](http://phing.info/docs/guide/stable/)
-* Download other third-party libraries like TinyMCE or Google Analytics. This may require minor PHP coding, but the tasks included with DDB show how it is done.
+* Download other third-party libraries like TinyMCE or Google Analytics. See the <download/> tag.
 * With a little bit of creativity, one could even configure Phing to actually run the Drupal installation routines. This would require a healthy dose of PHP code, though.
 
 Phing provides a powerful declarative XML-based language that happens to be particularly good at file system work. A look through the Phing manual may give you lots of other ideas for extensions to this system.
@@ -119,13 +119,22 @@ Phing provides a powerful declarative XML-based language that happens to be part
 
 DDB uses a handful of PHP classes to perform Drupal-specific build tasks. These are all located inside of src/lib. This code is licensed under the LGPL 2.1. You are free to modify it or use it as a template for you own tasks.
 
+* DrupalComponentDownloadTask (getcomponent): This downloads a module or theme that is located within Drupal's repository. It uses the Drupal release XML files to determine newest version and download URL.
+* DrupalDownloadTask (getdrupal): This downloads the latest version of Drupal.
+* HttpDownloadTask (download): This will download any old URL from any source that PHP handles with a stream wrapper. Generally, this is an HTTP URL, but PHP supports others as well.
+
 ## Why Doesn't DDB Use A Custom Install Profile
 
 While this system could directly interact with the Drupal installer (creating, for example, a custom install profile), it does not do so by default. Why? Because interaction is not necessary.
 
 ## Why Didn't You Just Use Drush-Make?
 
-I discovered drush-make the day after DDB was written. drush-make is a very basic make tool that does not have anywhere near the flexibility of Phing. You can review both for yourself and see what you prefer.
+There are several reasons I did not use drush-make:
+
+1. I did not know of it when I started.
+2. drush-make is not a full make-style program. It cannot do most of what Phing can do.
+3. drush-make may or may not be sustainable over the long run, and is utterly tied to Drupal. Phing is a long-lived mature PHP tool.
+4. Phing is easier to use.
 
 ## Why Is This LGPL Instead of GPL?
 
