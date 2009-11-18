@@ -42,6 +42,10 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
   TARGETS
   ==========================
   -->
+  
+  <target name="test">
+    <download url="http://localhost:8888/drupal-6.2.tar.gz" tofile="${tmpdir}/foo.tgz"/>
+  </target>
 
   <target name="explain">
     <echo>Adding modules ${drupal.modules}</echo>

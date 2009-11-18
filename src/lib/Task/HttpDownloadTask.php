@@ -9,9 +9,10 @@ class HttpDownloadTask extends Task {
   protected $file = NULL;
   
   public function init() {}
+  
   public function main() {
-    if (empty($this->url)) {
-      throw new Exception('No URL to download.');
+    if (empty($this->url) || filter_var($this->url, FILTER_VALIDATE_URL) === FALSE) {
+      throw new Exception('Invalid URL: You must specify a valid URL.');
     }
     if (empty($this->file)) {
       $this->file = basename($this->url);
