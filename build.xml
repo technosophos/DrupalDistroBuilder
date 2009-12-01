@@ -24,6 +24,7 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
   <property file="drupal.properties"/>
   <taskdef classname="lib.Task.DrupalDownloadTask" name="getdrupal"/>
   <taskdef classname="lib.Task.DrupalComponentDownloadTask" name="getcomponent"/>
+  <taskdef classname="lib.Task.DrupalExistingComponentTask" name="existingmodules"/>
   <taskdef classname="lib.Task.HttpDownloadTask" name="download"/>
 
   <!-- Files that must be included in the release -->
@@ -44,7 +45,12 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
   -->
   
   <target name="test">
-    <download url="http://localhost:8888/drupal-6.2.tar.gz" tofile="${tmpdir}/foo.tgz"/>
+    <!-- download url="http://localhost:8888/drupal-6.2.tar.gz" tofile="${tmpdir}/foo.tgz"/ -->
+    <existingmodules recursive="false" 
+      dir="${builddir}/drupal/sites/all/modules"
+      onlyupgrades="yes"
+      pinlist="${drupal.pin.modules}"/>
+    <echo>Existing modules: ${drupal.modules.existing}</echo>
   </target>
 
   <target name="explain">
@@ -89,12 +95,25 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
   </target>
   
   <!-- Fetch all desired modules. -->
-  <target name="getModules" depends="getDrupal">
+  <target name="getModules">
     <property name="downloaddestination" 
       value="${builddir}/drupal/sites/all/modules"
       override="yes"/>
     <mkdir dir="${builddir}/drupal/sites/all/modules"/>
     <foreach list="${drupal.modules}" param="currcomponent" 
+      target="downloadPackage"/>
+  </target>
+  
+  <!-- Updated all modules except for those in the pinlist. -->
+  <target name="updateModules">
+    <property name="downloaddestination" 
+      value="${builddir}/drupal/sites/all/modules"
+      override="yes"/>
+    <existingmodules recursive="false" 
+      dir="${downloaddestination}" 
+      pinlist="${drupal.pin.modules}"/>
+    <echo>Existing modules: ${drupal.modules.existing}</echo>
+    <foreach list="${drupal.update.modules}" param="currcomponent" 
       target="downloadPackage"/>
   </target>
   
