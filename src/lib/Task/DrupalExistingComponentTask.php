@@ -32,7 +32,8 @@ class DrupalExistingComponentTask extends Task {
     $infoFiles = array();
     $pattern = '/^([\-_\w]+\.info)$/';
     
-    $dirit = $this->isRecursive ? new RecursiveDirectoryIterator($this->path) : new DirectoryIterator($this->path);
+    //$dirit = $this->isRecursive ? new RecursiveDirectoryIterator($this->path) : new DirectoryIterator($this->path);
+    $dirit = new DirectoryIterator($this->path);
     foreach ($dirit as $file) {
       if (!$file->isDot() && $file->isDir()) {
         $filename = $file->getFilename();
