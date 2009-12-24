@@ -18,10 +18,16 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
   <property name="builddir" value="./src/tmp/build"/>
   <property name="currcomponent" value="autoload"/>
   <property name="tmpdir" value="./src/tmp"/>
+  <property name="installdir" value="${destdir}/drupal"/>
   
+  <!-- Path to extra commands -->
   <includepath classpath="${srcdir}"/>
   
+  <!-- Read properties file. Override where necessary. -->
   <property file="drupal.properties"/>
+  <property name="drupal.core.version" value="6.x"/>
+  
+  <!-- Tasks for working directly with Drupal. -->
   <taskdef classname="lib.Task.DrupalDownloadTask" name="getdrupal"/>
   <taskdef classname="lib.Task.DrupalComponentDownloadTask" name="getcomponent"/>
   <taskdef classname="lib.Task.DrupalExistingComponentTask" name="existingmodules"/>
@@ -51,15 +57,83 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
       onlyupgrades="yes"
       pinlist="${drupal.pin.modules}"/>
     <echo>Existing modules: ${drupal.modules.existing}</echo>
+    <echo>Available updates: ${drupal.modules.available.updates}</echo>
+  </target>
+  
+  <target name="help">
+    <echo>
+This tool can be used to manage building, deploying, and maintaining
+Drupal distributions.
+
+Common usages:
+
+Build a custom distribution including all of the modules defined in 
+the drupal.properties file:
+
+  $ phing
+
+The above will create a date/time-stamped tarball of the latest version of
+Drupal along with all of the modules you have specified.
+
+  $ phing explain
+
+The above will display information about what target directories are defined
+and what modules will be installed. However, it does not perform any 
+modifications to files.
+
+  $ phing -Dinstalldir=./foo install
+
+This does the same as the above, except that instead of building a tarball,
+it places the entire Drupal distribution in the directory passed as 
+-Dinstalldir (in this case, ./foo). If the directory is visible to the
+webserver, you should be able to immediately run install.php from your web 
+browser.
+
+  $ phing upgrade
+
+This will perform all necessary module updates. It does this by inspecting
+the installation's sites/all/modules directory and then checking Drupal.org's
+servers to see what updates are available. Any necessary updates will be 
+downloaded and installed.
+
+Don't want a particular module to be updated? Add it to the pin list in 
+drupal.properties.
+
+By default, modules in sites/default/modules are not automatically updated 
+because by convention only custom modules go there. To alter this behavior,
+you can modify the build.xml file for updateModules.
+
+  $ phing clean
+
+Remove all downloaded files and build directories. (This does NOT delete
+the files in the installdir, so it is safe to run after phing install)
+
+  $ phing -l
+
+List all available targets along with a short help message.
+    </echo>
   </target>
 
   <target name="explain">
-    <echo>Adding modules ${drupal.modules}</echo>
-    <echo>Adding themes ${drupal.themes}</echo>
-    <echo>Removing modules from core ${drupal.exclude.modules}</echo>
-    <echo>Removing themes from core ${drupal.exclude.themes}</echo>
+    <echo>
+    =============================================================
+    Drupal version: ${drupal.core.version}
+    Modules to Add: ${drupal.modules}
+    Themes to Add: ${drupal.themes}
+    Core Modules to Remove: ${drupal.exclude.modules}
+    Core Themes to Remove: ${drupal.exclude.themes}
+    
+    Temporary directory for downloads: ${tmpdir}
+    Build directory: ${builddir}
+    Installation dir (for 'install' task): ${installdir}
+    =============================================================
+    To set installdir, use the -Dinstalldir=/path argument:
+      $ phing -Dinstalldir=./foo install
+    You can test this with the following command:
+      $ phing -Dinstalldir=./foo explain
+    =============================================================
+    </echo>
   </target>
-  
   
   <!-- Main Target: 
   This fetches Drupal, your modules, and your themes. Then it prunes unwanted
@@ -70,9 +144,21 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
     depends="getDrupal,getModules,getThemes,pruneCore,repackage,clean">
   </target>
   
+  <!-- Update target:
+  This tries to update Drupal and all of the modules.
+  -->
+  <target name="update" description="Update a given installation. Override the downloaddestination property to tell this what path to update." 
+    depends="updateModules">
+  </target>
+  
+  <target name="install" description="Put a fresh installation in ${installdir}."
+    depends="getDrupal,getModules,getThemes,pruneCore,installAll"/>
+  
   <!-- Fetch the latest version of Drupal. -->
   <target name="getDrupal" description="Get Drupal from Drupal.org">
-      <getdrupal dir="${tmpdir}"/>
+      
+      <echo>Now retrieving ${drupal.core.version}.</echo>
+      <getdrupal dir="${tmpdir}" majorversion="${drupal.core.version}"/>
       <mkdir dir="${tmpdir}/unpack"/>
       <untar file="${tmpdir}/drupal-dl.tgz" todir="${tmpdir}/unpack"/>
       <copy todir="${builddir}">
@@ -81,6 +167,17 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
           <include name="**"/>
         </fileset>
       </copy>
+  </target>
+  
+  <!-- Updated all modules except for those in the pinlist. -->
+  <target name="updateDrupal">
+    <property name="downloaddestination" 
+      value="${builddir}/drupal/sites/all/modules"
+      override="yes"/>
+    <!-- 
+    This should probably getDrupal and then mv the contents to the named path. 
+    -->
+    <echo>Doing nothing: ${downloaddestination}</echo>
   </target>
   
   <!-- Fetch the latest version of a package (module or theme). -->
@@ -114,7 +211,7 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
       dir="${downloaddestination}" 
       pinlist="${drupal.pin.modules}"/>
     <echo>Existing modules: ${drupal.modules.existing}</echo>
-    <foreach list="${drupal.update.modules}" param="currcomponent" 
+    <foreach list="${drupal.modules.available.updates}" param="currcomponent" 
       target="downloadPackage"/>
   </target>
   
@@ -156,6 +253,14 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
         <include name="drupal/**"/>
       </fileset>
     </tar>
+  </target>
+  
+  <target name="installAll" depends="getDrupal">
+    <copy todir="${installdir}">
+      <fileset dir="${builddir}">
+        <include name="drupal/**"/>
+      </fileset>
+    </copy>
   </target>
   
   

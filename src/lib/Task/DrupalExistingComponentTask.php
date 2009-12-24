@@ -58,7 +58,9 @@ class DrupalExistingComponentTask extends Task {
     }
     
     if ($this->onlyUpgrades) {
-      $buffer = $this->skipNonUpgrades($buffer, $infoFiles);
+      $updates = array();
+      $buffer = $this->skipNonUpgrades($buffer, $infoFiles, $updates);
+      $this->getProject()->setNewProperty('drupal.modules.available.updates', implode(',',$updates));
     }
     
     $files = implode($this->sep, $buffer);
@@ -85,6 +87,9 @@ class DrupalExistingComponentTask extends Task {
     $this->pinlist = explode($this->pinlistSep, $pin);
   }
   
+  ////////////
+  // Internal
+  
   protected function skipPinlist($buffer) {
     $buffer2 = array();
     foreach ($buffer as $item) {
@@ -95,13 +100,14 @@ class DrupalExistingComponentTask extends Task {
     return $buffer2;
   }
   
-  protected function skipNonUpgrades($buffer, $infoFiles) {
+  protected function skipNonUpgrades($buffer, $infoFiles, &$updates) {
     $buffer2 = array();
     foreach ($buffer as $item) {
       $existing = $this->versionFromInfo($infoFiles[$item]);
       $hist = $this->drh->getPackageInfo($item);
       if ($existing != $hist->getVersionId()) {
         $buffer2[] = $item;
+        $updates[] = $item . '-' . $hist->getVersionId();
       }
       
     }
