@@ -56,6 +56,24 @@ That file will contain Drupal and all of the modules and themes you selected. If
 
 From there, follow the standard [Drupal installation instructions](http://drupal.org/getting-started/install) to proceed.
 
+## Viewing Help
+
+To view DDB's built-in help, run this command:
+
+    phing help
+    
+This will display the help page. To view information about the configuration,
+you can run this command:
+
+    phing explain
+    
+To view a list of all available phing commands, along with brief help, run this:
+
+    phing -l
+    
+You can also look at the build.xml file and drupal.properties file. Both are 
+documented.
+
 ### drupal.properties 
 
 As of this writing, there are only four properties to configure:
@@ -122,19 +140,20 @@ DDB uses a handful of PHP classes to perform Drupal-specific build tasks. These 
 * DrupalComponentDownloadTask (getcomponent): This downloads a module or theme that is located within Drupal's repository. It uses the Drupal release XML files to determine newest version and download URL.
 * DrupalDownloadTask (getdrupal): This downloads the latest version of Drupal.
 * HttpDownloadTask (download): This will download any old URL from any source that PHP handles with a stream wrapper. Generally, this is an HTTP URL, but PHP supports others as well.
+* DrupalExistingComponentTask: Update a module or theme.
+* SimplePatchTask: Apply a patch. You can download the patch with HttpDownloadTask and then automatically apply it with this task.
 
 ## Why Doesn't DDB Use A Custom Install Profile
 
-While this system could directly interact with the Drupal installer (creating, for example, a custom install profile), it does not do so by default. Why? Because interaction is not necessary.
+While this system could directly interact with the Drupal installer (creating, for example, a custom install profile), it does not do so by default. Why? Because there is no generic functionality that we feel we could add this way.
 
-## Why Didn't You Just Use Drush-Make?
+## Is this a clone of Drush/Drush-make?
 
-There are several reasons I did not use drush-make:
+Phing is not a clone of drush or drush-make (two recent Drupal tools). Phing is a generic build system for PHP applications, and it has been around for a decade. This package just tools phing's build process to provide standard Drupal tasks.
 
-1. I did not know of it when I started.
-2. drush-make is not a full make-style program. It cannot do most of what Phing can do.
-3. drush-make may or may not be sustainable over the long run, and is utterly tied to Drupal. Phing is a long-lived mature PHP tool.
-4. Phing is easier to use.
+DDB is designed as a starting point that you can tailor to your own needs. You should not have to write much, if any, PHP code to develop your own Drupal distro. (You will simply customize the build.xml and drupal.properties files.)
+
+Drush and Drush-make are special purpose tools without the flexibility of Phing. While they provide similar functionality, customizing them will involve learning the tool's internals and then writing custom code. Our goal is to keep you from ever having to do that. (Even if you have to write custom tools for DDB in PHP, there is almost no learning curve and you needn't know *any* internals.)
 
 ## Why Is This LGPL Instead of GPL?
 
@@ -145,6 +164,7 @@ This system is designed to be extended, and designed to be used for cases where 
 All code that comes as part of Phing is subject to Phing's own licensing terms.
 
 ### Build.xml and drupal.properties are not under LGPL
+
 build.xml is considered to be a configuration file IN THE PUBLIC DOMAIN, the contents of which are not subject to the source code license. drupal.properties is also a configuration file, and is also IN THE PUBLIC DOMAIN.
 
 ## Why Is This Code Not In Drupal's CVS?
@@ -156,4 +176,4 @@ Two reasons:
 
 ## Authors
 
-DrupalDistroBuilder was written by Matt Butcher (matt@aleph-null.tv). It relies heavily on Phing ([http://phing.info](http://phing.info)).
+DrupalDistroBuilder was written by Matt Butcher (matt@aleph-null.tv), it is a simple wrapper around Phing ([http://phing.info](http://phing.info)).
