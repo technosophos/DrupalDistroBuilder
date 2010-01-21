@@ -11,6 +11,12 @@ Copyright (c) 2009, Matt Butcher, some rights reserved.
 THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is asserted over build.xml. The source code in src/* is licensed under the LGPL 2.1.
 -->
 
+  <!-- 
+    Include properties. 
+    Having this first allows all properties to be overridden.
+  -->
+  <property file="drupal.properties"/>
+
   <!-- Global properties -->
   <property name="destdir" value="."/>
   <property name="srcdir" value="./src"/>
@@ -20,13 +26,14 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
   <property name="tmpdir" value="./src/tmp"/>
   <property name="installdir" value="${destdir}/drupal"/>
   
-  <!-- Path to extra commands -->
-  <includepath classpath="${srcdir}"/>
-  
-  <!-- Read properties file. Override where necessary. -->
-  <property file="drupal.properties"/>
+  <!-- Include path -->
+  <property name="phing.includes" value="${srcdir}"/>
+  <!-- Default version. -->  
   <property name="drupal.core.version" value="6.x"/>
-  
+
+  <!-- Path to extra commands -->
+  <includepath classpath="${phing.includes}"/>
+    
   <!-- Tasks for working directly with Drupal. -->
   <taskdef classname="lib.Task.DrupalDownloadTask" name="getdrupal"/>
   <taskdef classname="lib.Task.DrupalComponentDownloadTask" name="getcomponent"/>
@@ -203,7 +210,7 @@ List all available targets along with a short help message.
     <untar file="${tmpdir}/${currcomponent}-dl.tgz" todir="${tmpdir}/unpack"/>
     <copy todir="${downloaddestination}">
       <fileset dir="${tmpdir}/unpack">
-        <include name="${currcomponent}/**"/>
+        <include name="${component.name}/**"/>
       </fileset>
     </copy>
   </target>
