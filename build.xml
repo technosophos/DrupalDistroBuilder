@@ -89,6 +89,22 @@ it places the entire Drupal distribution in the directory passed as
 webserver, you should be able to immediately run install.php from your web 
 browser.
 
+It is easier to set 'installdir' in drupal.properties, and then do this:
+
+  $ phing install
+  
+Then, installdir will be used to determine where to place files.
+
+You can also install individual modules into 'installdir' with this command:
+
+  $ phing mod -Download=querypath
+
+This will install the querypath module. You can install multiple modules using the same format as you would use in drupal.properties:
+
+  $ phing mod -Download=querypath,amplify,quiz
+  
+The above will install querypath, amplify, and quiz. Note that you must not leave whitespace between module names, as the shell will interpret those as separate arguments.
+
   $ phing upgrade
 
 This will perform all necessary module updates. It does this by inspecting
