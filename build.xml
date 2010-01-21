@@ -192,6 +192,14 @@ List all available targets along with a short help message.
     </copy>
   </target>
   
+  <target name="mod">
+    <!-- for -Download -->
+    <property name="ownload" value="" override="yes"/>
+    <property name="downloaddestination" value="${installdir}/sites/all/modules"
+      override="yes"/>
+    <foreach list="${ownload}" param="currcomponent" target="downloadPackage"/> 
+  </target>
+  
   <!-- Fetch all desired modules. -->
   <target name="getModules">
     <property name="downloaddestination" 
