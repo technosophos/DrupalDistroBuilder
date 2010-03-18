@@ -1,4 +1,4 @@
-# Using DrupalDistroBuilder
+# Drupal and Phing: Using DrupalDistroBuilder
 
 DrupalDistroBuilder (DDB) is a simple tool for creating customized installation packages of Drupal. Out of the box (with no changes), DDB does the following:
 

@@ -185,7 +185,7 @@ List all available targets along with a short help message.
       <mkdir dir="${tmpdir}/unpack"/>
       <untar file="${tmpdir}/drupal-dl.tgz" todir="${tmpdir}/unpack"/>
       <copy todir="${builddir}">
-        <mapper type="regexp" from="^drupal-[\.0-9]+\/(.*)" to="drupal/\1"/>
+        <mapper type="regexp" from="^drupal-[\.0-9a-z\-]+\/(.*)" to="drupal/\1"/>
         <fileset dir="${tmpdir}/unpack/">
           <include name="**"/>
         </fileset>
