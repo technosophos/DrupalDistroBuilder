@@ -206,7 +206,7 @@ List all available targets along with a short help message.
   
   <!-- Fetch the latest version of a package (module or theme). -->
   <target name="downloadPackage">
-    <getcomponent component="${currcomponent}" dir="${tmpdir}"/>
+    <getcomponent component="${currcomponent}" dir="${tmpdir}"  drupalVersion="${drupal.core.version}"/>
     <echo>${component.name}-${component.version}</echo>
     <untar file="${tmpdir}/${currcomponent}-dl.tgz" todir="${tmpdir}/unpack"/>
     <copy todir="${downloaddestination}">
