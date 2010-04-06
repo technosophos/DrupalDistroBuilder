@@ -11,7 +11,18 @@ At the end of the process, you are left with a shiny new archive (named drupal-V
 
 From there, all you need to do is install the new package, following the same installation procedure as always.
 
-But this is just the tip of the iceberg. DDB is a starting point for customization. Simply modify the build.xml file to take advantage of all of the tools and capabilities in Phing.
+But this is just the tip of the iceberg. DDB is a starting point for customization. Simply modify the build.xml file to take advantage of all of the tools and capabilities in Phing. Here are some other things you can do with DDB:
+
+* Perform custom installs, using DDB to automatically add you preferred modules and themes.
+* Perform various standard build tasks, like backing up the database, building docs, and so on.
+* Update modules and themes.
+* Integrate with Drush to fire off Drush commands.
+* Build your own deployment and code management tool.
+* Add external dependencies like jQuery plugins or other PHP scripts.
+
+With other Phing extensions, you can even integrate with SVN, CVS, Git, and other VCS systems. Add a little bit of PHP, and you can write your own Phing tasks.
+
+And you can customize to your liking by just modifying a single XML file.
 
 ## Installation
 
@@ -122,7 +133,7 @@ DDB is highly configurable, and is not intended to be a one-size-fits-all soluti
 A few things you can easily make Phing do to Drupal:
 
 * Move files and directories around. For example, by default DDB stores all modules in sites/default/all/modules (which will interoperate well with Drush). You can easily change this in Phing, though.
-* Dynamically replace strings. Yes, you can programmatically remote "Blue Smurf" from the search page.
+* Dynamically replace strings. Yes, you can programmatically remove "Blue Smurf" from the search page.
 * Programmatically patch core or modules.
 * Create a default settings.php file, complete with preconfigured database connections. In fact, you can even PRE-CREATE the database from within the build.xml script. See [PDOSQLExecTask](http://phing.info/docs/guide/stable/chapters/appendixes/AppendixC-OptionalTasks.html#PDOSQLExecTask)
 * Create a custom installation profile on the fly. This takes a little bit of work and perhaps some dynamic code generation, but it is certainly possible.
@@ -142,6 +153,7 @@ DDB uses a handful of PHP classes to perform Drupal-specific build tasks. These 
 * HttpDownloadTask (download): This will download any old URL from any source that PHP handles with a stream wrapper. Generally, this is an HTTP URL, but PHP supports others as well.
 * DrupalExistingComponentTask: Update a module or theme.
 * SimplePatchTask: Apply a patch. You can download the patch with HttpDownloadTask and then automatically apply it with this task.
+* DrupalComponentInfoTask (showcomponent): This shows information for a particular package, and can be used to query Drupal's package server.
 
 ## Why Doesn't DDB Use A Custom Install Profile
 
