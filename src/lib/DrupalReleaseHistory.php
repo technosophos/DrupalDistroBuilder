@@ -126,7 +126,7 @@ class DrupalProject {
       
       // Get minor:
       $releases = $this->qp->branch()->top('version_major:contains(' . $major . ')')->parent();
-      $highest_patch = 0;
+      $highest_patch = 'x';
       foreach ($releases as $release) {
         $patch_level = $release->find('version_patch')->text();
         
@@ -139,6 +139,11 @@ class DrupalProject {
       }
       
       $version = $this->packageInfo['drupal version'] . '-' . $major . '.' . $highest_patch;
+      
+      // If the highest patch number is still X, then we are at a dev version.
+      if ($highest_patch == 'x') {
+        $version .= '-dev';
+      }
     }
     return $version;
   }
@@ -153,6 +158,7 @@ class DrupalProject {
       ->parent()
       ->children('download_link:first')
       ->text();
+    
     if (empty($url)) {
       throw new DrupalVersionException('No URL for the supplied version ' . htmlentities($versionString));
     }

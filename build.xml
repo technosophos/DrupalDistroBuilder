@@ -39,6 +39,7 @@ THIS PARTICULAR FILE IS CONSIDERED TO BE PUBLIC DOMAIN. No license whatsoever is
   <taskdef classname="lib.Task.DrupalComponentDownloadTask" name="getcomponent"/>
   <taskdef classname="lib.Task.DrupalExistingComponentTask" name="existingmodules"/>
   <taskdef classname="lib.Task.HttpDownloadTask" name="download"/>
+  <taskdef classname="lib.Task.DrupalComponentInfoTask" name="showcomponent"/>
 
   <!-- Files that must be included in the release -->
   <fileset id="licensefiles" dir=".">
@@ -216,12 +217,23 @@ List all available targets along with a short help message.
     </copy>
   </target>
   
+  <target name="showPackage">
+    <showcomponent component="${currcomponent}" drupalVersion="${drupal.core.version}"/>
+    <echo>${component.name}-${component.version}</echo>
+  </target>
+  
   <target name="mod">
     <!-- for -Download -->
     <property name="ownload" value="" override="yes"/>
     <property name="downloaddestination" value="${installdir}/sites/all/modules"
       override="yes"/>
     <foreach list="${ownload}" param="currcomponent" target="downloadPackage"/> 
+  </target>
+  
+  <target name="info">
+    <!-- for -Download -->
+    <property name="ownload" value="" override="yes"/>
+    <foreach list="${ownload}" param="currcomponent" target="showPackage"/> 
   </target>
   
   <!-- Fetch all desired modules. -->
