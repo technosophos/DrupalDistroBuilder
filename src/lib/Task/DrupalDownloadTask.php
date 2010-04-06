@@ -29,6 +29,8 @@ class DrupalDownloadTask extends Task {
     copy($url, $outfile);
     
     $this->getProject()->setNewProperty('drupal.version', $version);
+    $this->getProject()->setNewProperty('drupal.url', $url);
+    
   }
   
   public function setMajorVersion($version) {

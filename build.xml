@@ -182,6 +182,7 @@ List all available targets along with a short help message.
       
       <echo>Now retrieving ${drupal.core.version}.</echo>
       <getdrupal dir="${tmpdir}" majorversion="${drupal.core.version}"/>
+      <echo>Fetched ${drupal.version} from ${drupal.url}</echo>
       <mkdir dir="${tmpdir}/unpack"/>
       <untar file="${tmpdir}/drupal-dl.tgz" todir="${tmpdir}/unpack"/>
       <copy todir="${builddir}">
