@@ -23,8 +23,8 @@ class DrupalDownloadTask extends Task {
     
     $version = $dcr->latestVersionId();
     $url = $dcr->latestDownloadUrl();
-    //$outfile = sprintf('%s/drupal-%s.tgz', $this->path, $version);
-    $outfile = sprintf('%s/drupal-dl.tgz', $this->path);
+    $outfile = sprintf('%s/drupal-%s.tgz', $this->path, $version);
+    //$outfile = sprintf('%s/drupal-dl.tgz', $this->path);
     
     copy($url, $outfile);
     
