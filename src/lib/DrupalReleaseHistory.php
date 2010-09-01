@@ -93,6 +93,7 @@ class DrupalProject {
   
   protected $qp;
   protected $packageInfo;
+  protected $lenience = TRUE;
   
   /**
    * @param mixed $xml
@@ -103,6 +104,21 @@ class DrupalProject {
   public function __construct($xml, $packageInfo) {
     $this->qp = qp($xml);
     $this->packageInfo = $packageInfo;
+  }
+  
+  public function setLenience($lenient = TRUE) {
+    $this->lenience = $linient;
+  }
+  
+  /**
+   * Indicates whether the system will be forgiving of projects that don't have official releases.
+   *
+   * When the system is lenient, it will try to do a number of "more flexible" things to figure
+   * out what package version to download on projects that do not explicitly declare a stable 
+   * version.
+   */
+  public function isLenient() {
+    return $this->lenience;
   }
   
   public function getPackageName() {
@@ -119,9 +135,18 @@ class DrupalProject {
     else {
       
       // Get major:
-      $major = $this->qp->branch()->top('project>recommended_major')->text();
+      $major = $this->qp->branch()->top('project>recommended_major,project>default_major')->text();
       if (empty($major)) {
-        throw new DrupalVersionException('No recommended version.');
+        
+        if ($this->isLenient()) {
+          $major = $this->qp->branch()->top('project>releases>release:first>version_major')->text();
+        }
+        // Test again.
+        if (empty($major)){
+          $this->qp->writeXML();
+          throw new DrupalVersionException('No recommended or default version for ' . $this->packageInfo['package name']);          
+        }
+        
       }
       
       // Get minor:

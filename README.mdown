@@ -126,6 +126,8 @@ You can also run specific tasks by name. So if you just want to clean up after a
     
 All tasks are defined in the build.xml file, and can be edited to your liking. You may add your own targets or change the configuration in your build.xml file. You are advised to back up this file before upgrading to a new version of DDB, which may overwrite your build.xml file.
 
+[More](http://github.com/technosophos/DrupalDistroBuilder/wiki)
+
 ## Can DDB Be Configured To...?
 
 DDB is highly configurable, and is not intended to be a one-size-fits-all solution. In fact, it was built on top of Phing precisely for that reason. To modify the way the package builder works, simply make a backup copy of build.xml, and then hack away at build.xml. The Phing project is [fully documented](http://phing.info/)
