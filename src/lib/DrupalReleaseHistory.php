@@ -135,7 +135,9 @@ class DrupalProject {
     else {
       
       // Get major:
-      $major = $this->qp->branch()->top('project>recommended_major,project>default_major')->text();
+      $major = $this->qp->branch()
+        ->top('project>recommended_major,project>default_major')->eq(0)->text();
+        
       if (empty($major)) {
         
         if ($this->isLenient()) {
