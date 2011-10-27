@@ -301,8 +301,8 @@ List all available targets along with a short help message.
   
   <target name="installAll" depends="getDrupal">
     <copy todir="${installdir}">
-      <fileset dir="${builddir}">
-        <include name="drupal/**"/>
+      <fileset dir="${builddir}/drupal">
+        <include name="**"/>
       </fileset>
     </copy>
   </target>
